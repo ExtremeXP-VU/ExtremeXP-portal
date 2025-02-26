@@ -19,6 +19,9 @@ function useRequest<T>(options: AxiosRequestConfig = defaultRequestConfig) {
   const [loaded, setLoaded] = useState(false);
   const controllerRef = useRef(new AbortController()); // AbortController is used to cancel the request
 
+  axios.defaults.headers.common['Access-Control-Allow-Origin'] = '*';
+  axios.defaults.headers.common['Authorization'] = `Bearer ${useAccountStore.getState().token}`;
+
   const cancelRequest = () => {
     controllerRef.current.abort();
   };
@@ -30,8 +33,15 @@ function useRequest<T>(options: AxiosRequestConfig = defaultRequestConfig) {
       setError(null);
       setLoaded(false);
 
-      const loginToken = useAccountStore.getState().token;
-      const params = loginToken ? { token: loginToken } : {};
+      const loginToken = useAccountStore.getState();
+      // const params = loginToken ? { token: loginToken } : {};
+      const params = {};
+      console.log('useRequest->loginToken', loginToken.token);
+
+      let scope = "ReadData";
+      if (requestOptions?.method === 'POST' || requestOptions?.method === 'PUT' || requestOptions?.method === 'DELETE') {
+        scope = "WriteData";
+      }
 
       return axios
         .request<T>({
@@ -41,6 +51,10 @@ function useRequest<T>(options: AxiosRequestConfig = defaultRequestConfig) {
           signal: controllerRef.current.signal,
           params: { ...params, ...requestOptions?.params },
           data: requestOptions?.data || options.data,
+          headers: {
+            Authorization: `Bearer ${loginToken.token}`,
+            'Authorization-Scope': scope,
+          }
         })
         .then((response) => {
           setData(response.data);

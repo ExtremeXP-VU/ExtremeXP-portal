@@ -6,6 +6,7 @@ WORKDIR /server-authentication
 # https://copyprogramming.com/howto/install-pandas-in-a-dockerfile
 
 RUN pip install -r requirements.txt
+RUN apk add net-tools
 
 COPY . .
 

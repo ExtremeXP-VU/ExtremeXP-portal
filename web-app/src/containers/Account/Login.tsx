@@ -25,7 +25,9 @@ const Login = () => {
       },
     })
       .then((response) => {
+
         const token = response.data.jwt;
+        console.log("token", token);
         if (token) {
           login(username, token);
           navigate('/dashboard/projects');

@@ -1,4 +1,5 @@
 .idea
+.env
 .vscode
 .DS_Store
 zenoh1/fs/projects

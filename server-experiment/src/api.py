@@ -6,7 +6,7 @@ from experimentHandler import experimentHandler
 from categoryHandler import categoryHandler
 from taskHandler import taskHandler
 from datasetHandler import datasetHandler
-from convertorHandler import convertorHandler
+from convertorHandler import ConvertorHandler
 import json
 import requests
 
@@ -25,10 +25,12 @@ ENDPOINT_WITHOUT_AUTH = []
 # there's a bug in flask_cors that headers is None when using before_request for OPTIONS request
 @app.before_request
 def verify_user():
-    if request.endpoint in ENDPOINT_WITHOUT_AUTH:
+    if request.endpoint in ENDPOINT_WITHOUT_AUTH or request.method == "OPTIONS":
         return None
     # get token from params {'token': 'token'}
-    token = request.args.get("token")
+    token = request.headers.get("Authorization").split(" ")[1] if request.headers.get("Authorization") else None
+    print("Received args: ", request.args)
+    print("Received headers: ", request.headers)
     if token is None:
         return {"error": ERROR_FORBIDDEN, "message": "token is not provided"}, 403
     auth_res = userAuthHandler.verify_user(token)
@@ -454,7 +456,7 @@ def convert_to_source_model(exp_id):
     if not experimentHandler.experiment_exists(exp_id):
         return {"error": ERROR_NOT_FOUND, "message": "experiment not found"}, 404
     exp = experimentHandler.get_experiment(exp_id)
-    convert_res = convertorHandler.convert(exp)
+    convert_res = ConvertorHandler().convert(exp)
 
     app.logger.info('Executing experiment...')
     url = 'http://exp-eng-service:5556/exp/run'

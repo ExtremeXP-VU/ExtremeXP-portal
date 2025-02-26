@@ -16,27 +16,47 @@ services:
   auth-service:
     build: ./server-authentication
     container_name: auth-service
+    stop_signal: SIGINT
     ports:
       - '5555:5555'
+    environment:
+      - KEYCLOAK_SERVER_URL=${KEYCLOAK_SERVER_URL}
+      - KEYCLOAK_USERNAME=${KEYCLOAK_USERNAME}
+      - KEYCLOAK_USER_PASSWORD=${KEYCLOAK_USER_PASSWORD}
+      - OIDC_OP_AUTHORIZATION_ENDPOINT=${OIDC_OP_AUTHORIZATION_ENDPOINT}
+      - OIDC_OP_ENDSESSION_ENDPOINT=${OIDC_OP_ENDSESSION_ENDPOINT}
+      - OIDC_OP_JWKS_ENDPOINT=${OIDC_OP_JWKS_ENDPOINT}
+      - OIDC_OP_LOGOUT_ENDPOINT=${OIDC_OP_LOGOUT_ENDPOINT}
+      - OIDC_OP_LOGOUT_URL_METHOD=${OIDC_OP_LOGOUT_URL_METHOD}
+      - OIDC_OP_TOKEN_ENDPOINT=${OIDC_OP_TOKEN_ENDPOINT}
+      - OIDC_OP_USER_ENDPOINT=${OIDC_OP_USER_ENDPOINT}
+      - OIDC_RP_CLIENT_ID=${OIDC_RP_CLIENT_ID}
+      - OIDC_RP_REALM_ID=${OIDC_RP_REALM_ID}
+      - OIDC_RP_CLIENT_SECRET=${OIDC_RP_CLIENT_SECRET}
+      - OIDC_RP_SIGN_ALGO=${OIDC_RP_SIGN_ALGO}
     networks:
       - my_net
 
   exp-service:
     build: ./server-experiment
     container_name: exp-service
+    stop_signal: SIGINT
     ports:
       - '5050:5050'
     depends_on:
       - auth-service
       - emf-cloud-service
       - zenoh1
+      - zenoh2
       - mongo
+      - proxy-service
     networks:
       - my_net
 
   emf-cloud-service:
     build: ./server-emf-cloud
     container_name: emf-cloud-service
+    stop_signal: SIGINT
     ports:
       - '8081:8081'
     networks:
@@ -101,6 +121,43 @@ services:
     networks:
       my_net:
         ipv4_address: 192.168.10.15  # Use a unique IP address within the network
+
+  proxy-service:
+    image: ghcr.io/yagorezende/extremexp-abacproxy:dev
+    #  build:
+    #    context: /home/yagorezende/PycharmProjects/ExtremeXP-ABACProxy/
+    #    target: builder
+    container_name: proxy-service
+     # flask requires SIGINT to stop gracefully
+     # (default stop signal from Compose is SIGTERM)
+    stop_signal: SIGINT
+    ports:
+      - ${FLASK_APP_PORT}:${FLASK_APP_PORT}
+    environment:
+      - FLASK_APP_HOST=${FLASK_APP_HOST}
+      - FLASK_APP_PORT=${FLASK_APP_PORT}
+      - FLASK_APP_NAME=${FLASK_APP_NAME}
+      - FLASK_APP_DEBUG=${FLASK_APP_DEBUG}
+      - FLASK_APP_ENV=${FLASK_APP_ENV}
+      - FLASK_APP_SECRET_KEY=${FLASK_APP_SECRET_KEY}
+      - FLASK_APP_DATABASE_URI=${FLASK_APP_DATABASE_URI}
+      - KEYCLOAK_SERVER_URL=${KEYCLOAK_SERVER_URL}
+      - KEYCLOAK_USERNAME=${KEYCLOAK_USERNAME}
+      - KEYCLOAK_USER_PASSWORD=${KEYCLOAK_USER_PASSWORD}
+      - OIDC_OP_AUTHORIZATION_ENDPOINT=${OIDC_OP_AUTHORIZATION_ENDPOINT}
+      - OIDC_OP_ENDSESSION_ENDPOINT=${OIDC_OP_ENDSESSION_ENDPOINT}
+      - OIDC_OP_JWKS_ENDPOINT=${OIDC_OP_JWKS_ENDPOINT}
+      - OIDC_OP_LOGOUT_ENDPOINT=${OIDC_OP_LOGOUT_ENDPOINT}
+      - OIDC_OP_LOGOUT_URL_METHOD=${OIDC_OP_LOGOUT_URL_METHOD}
+      - OIDC_OP_TOKEN_ENDPOINT=${OIDC_OP_TOKEN_ENDPOINT}
+      - OIDC_OP_USER_ENDPOINT=${OIDC_OP_USER_ENDPOINT}
+      - OIDC_RP_CLIENT_ID=${OIDC_RP_CLIENT_ID}
+      - OIDC_RP_REALM_ID=${OIDC_RP_REALM_ID}
+      - OIDC_RP_CLIENT_SECRET=${OIDC_RP_CLIENT_SECRET}
+      - OIDC_RP_SIGN_ALGO=${OIDC_RP_SIGN_ALGO}
+    networks:
+      my_net:
+        ipv4_address: 192.168.10.22
 
 networks:
   my_net:

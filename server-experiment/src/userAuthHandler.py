@@ -7,7 +7,8 @@ class UserAuthHandler(object):
         self.userAuthUrl = "http://auth-service:5555/users/validation" 
 
     def verify_user(self, token):
-        r = requests.get(url = self.userAuthUrl, params = {'jwt': token})
+        r = requests.get(url = self.userAuthUrl,
+                         headers={"Authorization": "Bearer " + token})
         status=r.status_code
         data = r.json()
         print("received: ", data)

@@ -408,6 +408,3 @@ class ConvertorHandler:
         }
 
         return self.__emf_object_type(type_map.get(node["type"], None))
-
-
-convertorHandler = ConvertorHandler()

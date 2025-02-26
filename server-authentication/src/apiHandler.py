@@ -5,10 +5,12 @@ from jwtHandler import jwtHandler
 import json
 
 class ApiHandler(object):
-    def __init__(self):
+    def __init__(self, keycloak_interface=None):
         self.client = mongo_client
         self.db = self.client.user_auth
         self.user_info = self.db.user_info
+        self.keycloak_interface = keycloak_interface
+        
         if not self.user_exists("admin"):
             self.user_info.insert_one({"username": "admin", "password": "admin"})
 
@@ -26,6 +28,16 @@ class ApiHandler(object):
             if document["username"] == username:
                 return True
         return False
+    
+    def handle_auth(self, username, password) -> dict:
+        """
+        Authenticate user on Keycloak using username and password
+        :param username: The username of the user.
+        :param password: The password of the user.
+        :return: The response of the authentication.
+        """
+        return self.keycloak_interface.authenticate(username, password)
+
     
     def handle_register(self, username, password):
         self.user_info.insert_one({"username": username, "password": password})
@@ -45,6 +57,12 @@ class ApiHandler(object):
         query = {"username": username}
         new_value = { "$set": { "password": new_password } }
         self.user_info.update_one(query, new_value)
+
+    def is_token_valid(self, token):
+        return self.keycloak_interface.is_token_active(token)
+    
+    def get_user_info(self, token):
+        return self.keycloak_interface.userinfo(token)
 
     def verify_signiture(self,token):
         encoded_header, encoded_payload, encoded_signature = token.split('.')
@@ -79,5 +97,3 @@ class ApiHandler(object):
         cur_time = time.gmtime()
         cur_timestamp = calendar.timegm(cur_time)
         return cur_timestamp > exp_timestamp
-    
-apiHandler = ApiHandler()
