@@ -8,6 +8,7 @@ import Login from './containers/Account/Login';
 import Register from './containers/Account/Register';
 import Dashboard from './containers/Dashboard';
 import Experiments from './containers/Dashboard/Experiments';
+import Workflows from './containers/Dashboard/Workflows';
 import Progress from './containers/Dashboard/Progress';
 import ReusableTasks from './containers/Dashboard/ReusableTasks';
 import Project from './components/dashboard/Experiment';
@@ -45,6 +46,16 @@ const router = createBrowserRouter([
         children: [
           {
             path: '/dashboard/projects/:projID/experiments',
+            element: <Project />,
+          },
+        ],
+      },
+      {
+        path: '/dashboard/workflows',
+        element: <Workflows />,
+        children: [
+          {
+            path: '/dashboard/workflows/:projID/workflows',
             element: <Project />,
           },
         ],

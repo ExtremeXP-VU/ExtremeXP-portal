@@ -194,19 +194,19 @@ const Project = () => {
           className="specification__functions__new"
           onClick={handleNewExperiment}
         >
-          new experiment
+          new workflow
         </button>
         <button
           className="specification__functions__import"
           onClick={handleImportExperiment}
         >
-          import experiment
+          import workflow
         </button>
       </div>
       <div className="specification__contents">
         <div className="specification__contents__header">
           <div className="specification__contents__header__title">
-            Experiment
+            Workflow
           </div>
           <div className="specification__contents__header__create">
             Created At
@@ -219,7 +219,7 @@ const Project = () => {
         {isExperimentEmpty ? (
           <div className="specification__contents__empty">
             <span className="iconfont">&#xe6a6;</span>
-            <p>Empty Experiments</p>
+            <p>Empty Workflows</p>
           </div>
         ) : (
           <ul className="specification__contents__list">
