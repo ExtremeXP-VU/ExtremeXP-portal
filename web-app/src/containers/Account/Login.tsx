@@ -17,7 +17,7 @@ const Login = () => {
     if (!username || !password) return message('username or password is empty');
 
     loginRequest({
-      url: `users/login`,
+      url: `extreme_auth/api/v1/person/login`,
       method: 'POST',
       data: {
         username: username,
@@ -25,20 +25,20 @@ const Login = () => {
       },
     })
       .then((response) => {
-        const token = response.data.jwt;
+        const token = response?.access_token;
         if (token) {
           login(username, token);
           navigate('/dashboard/projects');
         }
       })
       .catch((error) => {
-        message(error.response.data?.message || 'unknown error');
+        message(error.response.data?.message || 'The username or password is not correct');
       });
   };
 
   const handleKeyPress = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === 'Enter') {
-      handleLogin();
+      handleLogin(); 
     }
   };
 
