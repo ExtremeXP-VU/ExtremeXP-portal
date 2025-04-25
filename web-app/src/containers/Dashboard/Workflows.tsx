@@ -1,11 +1,11 @@
 import './common.scss';
-import './experiments.scss';
+import './workflows.scss';
 import { useState, useEffect, useCallback, useMemo } from 'react';
 import useRequest from '../../hooks/useRequest';
 import { message } from '../../utils/message';
 import { timestampToDate } from '../../utils/timeToDate';
 import { Outlet, useNavigate } from 'react-router-dom';
-import { defaultProject } from '../../types/experiment';
+import { defaultProject } from '../../types/workflows';
 import Popover from '../../components/general/Popover';
 import {
   ProjectsResponseType,
@@ -14,7 +14,7 @@ import {
   DeleteProjectResponseType,
 } from '../../types/requests';
 
-const Experiments = () => {
+const Workflows = () => {
   const [projects, setProjects] = useState([defaultProject]);
   const [currentProj, setCurrentProj] = useState(defaultProject);
   const [searchInput, setSearchInput] = useState('');
@@ -63,7 +63,7 @@ const Experiments = () => {
     getProjects();
   }, []);
 
-  // set the first experiment as the current experiment when enter the page
+  // set the first workflow as the current workflow when enter the page
   useEffect(() => {
     if (projects.length > 0 && currentProj.id_project === 'default') {
       setCurrentProj(projects[0]);
@@ -74,7 +74,7 @@ const Experiments = () => {
     navigate(`/dashboard/workflows/${currentProj?.id_project}/workflows`);
   }, [currentProj.id_project]);
 
-  // FIXME: Add experiment name validation
+  // FIXME: Add workflow name validation
   const isProjectNameValid = (name: string) => {
     if (!name) {
       message('Project name can not be empty');
@@ -266,7 +266,7 @@ const Experiments = () => {
               </div>
             ) : (
               <>
-                <div className="dashboard__common__right__header experiments__header">
+                <div className="dashboard__common__right__header workflows__header">
                   <div className="dashboard__common__right__header__info">
                     <div className="dashboard__common__right__header__info__name">
                       <span
@@ -342,4 +342,4 @@ const Experiments = () => {
   );
 };
 
-export default Experiments;
+export default Workflows;

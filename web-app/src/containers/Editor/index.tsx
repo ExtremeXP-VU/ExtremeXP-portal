@@ -31,10 +31,10 @@ import Validation from '../../components/editor/Validation';
 
 import {
   defaultGraphicalModel,
-  defaultExperiment,
-  ExperimentType,
+  defaultWorkflow,
+  WorkflowType,
   GraphicalModelType,
-} from '../../types/experiment';
+} from '../../types/workflows';
 
 import { TaskType, TaskVariantType } from '../../types/task';
 
@@ -104,8 +104,8 @@ const Editor = () => {
   const projID = useLocation().pathname.split('/')[3];
   const experimentID = useLocation().pathname.split('/')[4];
 
-  const [experiment, setExperiment] = useState<ExperimentType | TaskType>(
-    defaultExperiment
+  const [experiment, setExperiment] = useState<WorkflowType | TaskType>(
+    defaultWorkflow
   );
   const [graphicalModel, setGraphicalModel] = useState(defaultGraphicalModel);
 
@@ -123,7 +123,7 @@ const Editor = () => {
       url: url,
     })
       .then((data) => {
-        let newExperiment: ExperimentType | TaskType = defaultExperiment;
+        let newExperiment: WorkflowType | TaskType = defaultWorkflow;
         if (specificationType === 'experiment') {
           if ('experiment' in data.data) {
             newExperiment = data.data.experiment;

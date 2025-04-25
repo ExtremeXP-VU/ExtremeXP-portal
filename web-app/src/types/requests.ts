@@ -1,4 +1,4 @@
-import { ExperimentType } from './experiment';
+import { WorkflowType } from './workflows';
 import { TaskType } from './task';
 
 export type LoginResponseType = {
@@ -55,14 +55,14 @@ export type DeleteProjectResponseType = {
 export type ExperimentResponseType = {
   message: string;
   data: {
-    experiment: ExperimentType;
+    experiment: WorkflowType;
   };
 };
 
 export type ExperimentsResponseType = {
   message: string;
   data: {
-    experiments: Array<ExperimentType>;
+    experiments: Array<WorkflowType>;
   };
 };
 

@@ -14,7 +14,7 @@ export interface GraphicalModelType {
   edges: Array<Edge>;
 }
 
-export interface ExperimentType {
+export interface WorkflowType {
   id_experiment: string;
   project_id: string;
   name: string;
@@ -39,7 +39,7 @@ export const defaultGraphicalModel = {
   edges: initialEdges,
 };
 
-export const defaultExperiment = {
+export const defaultWorkflow = {
   id_experiment: '',
   project_id: '',
   name: '',

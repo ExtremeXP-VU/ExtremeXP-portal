@@ -30,14 +30,6 @@ const Repository = () => {
           <span>Dashboard</span>
         </div>
         <div className="repository__panel__items">
-          <Link to={'/dashboard/workflows'}>
-            <div
-              className={`repository__panel__items__item ${workflowsSelectedClass}`}
-            >
-              <span className="iconfont">&#xe6cf;</span>
-              <p>Workflows</p>
-            </div>
-          </Link>
           {/* TODO icon */}
           <Link to={'/dashboard/projects'}>
             <div
@@ -47,7 +39,14 @@ const Repository = () => {
               <p>Experiments</p>
             </div>
           </Link>
-          
+          <Link to={'/dashboard/workflows'}>
+            <div
+              className={`repository__panel__items__item ${workflowsSelectedClass}`}
+            >
+              <span className="iconfont">&#xe6cf;</span>
+              <p>Workflows</p>
+            </div>
+          </Link>
           <Link to={'/dashboard/categories'}>
             <div
               className={`repository__panel__items__item ${taskSelectedClass}`}

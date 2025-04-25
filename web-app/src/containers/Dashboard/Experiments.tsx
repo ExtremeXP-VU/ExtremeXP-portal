@@ -1,11 +1,11 @@
 import './common.scss';
-import './experiments.scss';
+import './workflows.scss';
 import { useState, useEffect, useCallback, useMemo } from 'react';
 import useRequest from '../../hooks/useRequest';
 import { message } from '../../utils/message';
 import { timestampToDate } from '../../utils/timeToDate';
 import { Outlet, useNavigate } from 'react-router-dom';
-import { defaultProject } from '../../types/experiment';
+import { defaultProject } from '../../types/workflows';
 import Popover from '../../components/general/Popover';
 import {
   ProjectsResponseType,

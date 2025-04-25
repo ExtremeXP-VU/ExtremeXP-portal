@@ -11,7 +11,7 @@ import Experiments from './containers/Dashboard/Experiments';
 import Workflows from './containers/Dashboard/Workflows';
 import Progress from './containers/Dashboard/Progress';
 import ReusableTasks from './containers/Dashboard/ReusableTasks';
-import Project from './components/dashboard/Experiment';
+import Project from './components/dashboard/Workflow';
 import Tasks from './containers/Dashboard/Tasks';
 import Category from './components/dashboard/Task';
 import Editor from './containers/Editor';
