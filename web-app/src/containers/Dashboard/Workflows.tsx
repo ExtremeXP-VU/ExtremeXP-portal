@@ -45,7 +45,7 @@ const Workflows = () => {
 
   const getProjects = useCallback(() => {
     projectsRequest({
-      url: `exp/projects`,
+      url: `work/projects`,
     })
       .then((data) => {
         if (data.data.projects) {
@@ -90,7 +90,7 @@ const Workflows = () => {
   const handleCreateProject = () => {
     if (!isProjectNameValid(createprojName)) return;
     createProjectRequest({
-      url: `exp/projects/create`,
+      url: `work/projects/create`,
       method: 'POST',
       data: {
         name: createprojName,
@@ -146,7 +146,7 @@ const Workflows = () => {
     }
 
     updateProjectRequest({
-      url: `exp/projects/${currentProj.id_project}/update`,
+      url: `work/projects/${currentProj.id_project}/update`,
       method: 'PUT',
       data: {
         name: projNameInput,
@@ -178,7 +178,7 @@ const Workflows = () => {
 
   const handleDeleteProject = () => {
     deleteProjectRequest({
-      url: `exp/projects/${currentProj.id_project}/delete`,
+      url: `work/projects/${currentProj.id_project}/delete`,
       method: 'DELETE',
     })
       .then(() => {

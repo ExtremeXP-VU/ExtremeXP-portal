@@ -15,42 +15,42 @@ import {
   defaultWorkflow,
 } from '../../../types/workflows';
 import {
-  ExperimentsResponseType,
-  CreateExperimentResponseType,
-  UpdateExperimentNameResponseType,
-  DeleteExperimentResponseType,
+  WorkflowsResponseType,
+  CreateWorkflowResponseType,
+  UpdateWorkflowNameResponseType,
+  DeleteWorkflowResponseType,
 } from '../../../types/requests';
 
 const Project = () => {
   const [workflows, setWorkflows] = useState([defaultWorkflow]);
   const [editingIndex, setEditingIndex] = useState<number | null>(null);
-  const [newExpName, setNewExpName] = useState('');
+  const [newWorkName, setNewWorkName] = useState('');
 
   const [showPopover, setShowPopover] = useState(false);
   const [deleteIndex, setDeleteIndex] = useState<number | null>(null);
 
-  const isExperimentEmpty = workflows.length === 0;
+  const isWorkflowEmpty = workflows.length === 0;
 
   // make sure the expID is the same as the one in the url
   const projID = useLocation().pathname.split('/')[3];
 
-  const { request: workflowsRequest } = useRequest<ExperimentsResponseType>();
-  const { request: createExperimentRequest } =
-    useRequest<CreateExperimentResponseType>();
-  const { request: updateExpNameRequest } =
-    useRequest<UpdateExperimentNameResponseType>();
-  const { request: deleteExperimentRequest } =
-    useRequest<DeleteExperimentResponseType>();
+  const { request: workflowsRequest } = useRequest<WorkflowsResponseType>();
+  const { request: createWorkflowRequest } =
+    useRequest<CreateWorkflowResponseType>();
+  const { request: updateWorkNameRequest } =
+    useRequest<UpdateWorkflowNameResponseType>();
+  const { request: deleteWorkflowRequest } =
+    useRequest<DeleteWorkflowResponseType>();
 
   const navigate = useNavigate();
 
   const getWorkflows = useCallback(() => {
     workflowsRequest({
-      url: `exp/projects/${projID}/experiments`,
+      url: `work/projects/${projID}/workflows`,
     })
       .then((data) => {
-        if (data.data.experiments) {
-          const workflows = data.data.experiments;
+        if (data.data.workflows) {
+          const workflows = data.data.workflows;
           setWorkflows(workflows);
         }
       })
@@ -67,11 +67,11 @@ const Project = () => {
 
   const postNewWorkflow = useCallback(
     (name: string, graphicalModel: GraphicalModelType) => {
-      createExperimentRequest({
-        url: `/exp/projects/${projID}/experiments/create`,
+      createWorkflowRequest({
+        url: `/work/projects/${projID}/workflows/create`,
         method: 'POST',
         data: {
-          exp_name: name,
+          work_name: name,
           graphical_model: graphicalModel,
         },
       })
@@ -84,18 +84,18 @@ const Project = () => {
           }
         });
     },
-    [projID, createExperimentRequest, getWorkflows]
+    [projID, createWorkflowRequest, getWorkflows]
   );
 
-  const handleNewExperiment = () => {
-    postNewWorkflow(`experiment-${timeNow()}`, {
+  const handleNewWorkflow = () => {
+    postNewWorkflow(`workflow-${timeNow()}`, {
       nodes: [],
       edges: [],
     });
   };
 
   const handleStartEditingName = (index: number) => {
-    setNewExpName(workflows[index].name);
+    setNewWorkName(workflows[index].name);
     if (editingIndex === null) {
       setEditingIndex(index);
     } else {
@@ -106,29 +106,29 @@ const Project = () => {
   const handleKeyPress = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === 'Enter') {
       if (editingIndex === null) return;
-      if (newExpName === '' || newExpName === workflows[editingIndex].name) {
+      if (newWorkName === '' || newWorkName === workflows[editingIndex].name) {
         setEditingIndex(null);
         return;
       }
-      renameExperiment();
+      renameWorkflow();
       setEditingIndex(null);
     }
   };
 
-  const renameExperiment = () => {
-    if (newExpName === '' || editingIndex === null) return;
-    if (newExpName === workflows[editingIndex].name) return;
-    if (newExpName.length > 35) {
+  const renameWorkflow = () => {
+    if (newWorkName === '' || editingIndex === null) return;
+    if (newWorkName === workflows[editingIndex].name) return;
+    if (newWorkName.length > 35) {
       message('The length of the name should be less than 35 characters.');
       return;
     }
-    updateExpNameRequest({
-      url: `/exp/projects/${projID}/experiments/${
-        workflows[editingIndex!].id_experiment
+    updateWorkNameRequest({
+      url: `/work/projects/${projID}/workflows/${
+        workflows[editingIndex!].id_workflow
       }/update/name`,
       method: 'PUT',
       data: {
-        exp_name: newExpName,
+        work_name: newWorkName,
       },
     })
       .then(() => {
@@ -139,15 +139,15 @@ const Project = () => {
       });
   };
 
-  const handleDownloadExperiment = (index: number) => {
+  const handleDownloadWorkflow = (index: number) => {
     downloadGraphicalModel(
       workflows[index].graphical_model,
       workflows[index].name
     );
   };
 
-  const handleOpenExperiment = (experiment: WorkflowType) => {
-    navigate(`/editor/experiment/${projID}/${experiment.id_experiment}`);
+  const handleOpenWorkflow = (workflow: WorkflowType) => {
+    navigate(`/editor/workflow/${projID}/${workflow.id_workflow}`);
   };
 
   function handleOpenPopover(index: number) {
@@ -164,10 +164,10 @@ const Project = () => {
     closeMask();
   }
 
-  const handleDeleteExperiment = () => {
+  const handleDeleteWorkflow= () => {
     if (deleteIndex === null) return;
-    deleteExperimentRequest({
-      url: `/exp/projects/${projID}/experiments/${workflows[deleteIndex].id_experiment}/delete`,
+    deleteWorkflowRequest({
+      url: `/work/projects/${projID}/workflows/${workflows[deleteIndex].id_workflow}/delete`,
       method: 'DELETE',
     })
       .then(() => {
@@ -179,12 +179,12 @@ const Project = () => {
     closeMask();
   };
 
-  async function handleImportExperiment() {
+  async function handleImportWorkflow() {
     const model = await uploadGraphicalModel();
     if (!model) {
       return;
     }
-    postNewWorkflow(`imported-experiment-${timeNow()}`, model);
+    postNewWorkflow(`imported-workflow-${timeNow()}`, model);
   }
 
   return (
@@ -192,13 +192,13 @@ const Project = () => {
       <div className="specification__functions">
         <button
           className="specification__functions__new"
-          onClick={handleNewExperiment}
+          onClick={handleNewWorkflow}
         >
           new workflow
         </button>
         <button
           className="specification__functions__import"
-          onClick={handleImportExperiment}
+          onClick={handleImportWorkflow}
         >
           import workflow
         </button>
@@ -216,7 +216,7 @@ const Project = () => {
           </div>
           <div className="specification__contents__header__operations"></div>
         </div>
-        {isExperimentEmpty ? (
+        {isWorkflowEmpty ? (
           <div className="specification__contents__empty">
             <span className="iconfont">&#xe6a6;</span>
             <p>Empty Workflows</p>
@@ -236,8 +236,8 @@ const Project = () => {
                   {editingIndex === index ? (
                     <input
                       type="text"
-                      value={newExpName}
-                      onChange={(e) => setNewExpName(e.target.value)}
+                      value={newWorkName}
+                      onChange={(e) => setNewWorkName(e.target.value)}
                       onKeyUp={handleKeyPress}
                     />
                   ) : (
@@ -254,7 +254,7 @@ const Project = () => {
                   <span
                     title="download graphical model"
                     className="iconfont editable"
-                    onClick={() => handleDownloadExperiment(index)}
+                    onClick={() => handleDownloadWorkflow(index)}
                   >
                     &#xe627;
                   </span>
@@ -268,7 +268,7 @@ const Project = () => {
                   <button
                     title="open specification in the graphical editor"
                     onClick={() => {
-                      handleOpenExperiment(specification);
+                      handleOpenWorkflow(specification);
                     }}
                   >
                     open
@@ -295,7 +295,7 @@ const Project = () => {
             </button>
             <button
               className="popover__delete__buttons__confirm"
-              onClick={handleDeleteExperiment}
+              onClick={handleDeleteWorkflow}
             >
               confirm
             </button>

@@ -15,10 +15,10 @@ import {
   defaultWorkflow,
 } from '../../../types/workflows';
 import {
-  ExperimentsResponseType,
-  CreateExperimentResponseType,
-  UpdateExperimentNameResponseType,
-  DeleteExperimentResponseType,
+  WorkflowsResponseType,
+  CreateWorkflowResponseType,
+  UpdateWorkflowNameResponseType,
+  DeleteWorkflowResponseType,
 } from '../../../types/requests';
 
 const Project = () => {
@@ -34,24 +34,24 @@ const Project = () => {
   // make sure the expID is the same as the one in the url
   const projID = useLocation().pathname.split('/')[3];
 
-  const { request: experimentsRequest } = useRequest<ExperimentsResponseType>();
+  const { request: experimentsRequest } = useRequest<WorkflowsResponseType>();
   const { request: createExperimentRequest } =
-    useRequest<CreateExperimentResponseType>();
+    useRequest<CreateWorkflowResponseType>();
   const { request: updateExpNameRequest } =
-    useRequest<UpdateExperimentNameResponseType>();
+    useRequest<UpdateWorkflowNameResponseType>();
   const { request: deleteExperimentRequest } =
-    useRequest<DeleteExperimentResponseType>();
+    useRequest<DeleteWorkflowResponseType>();
 
   const navigate = useNavigate();
 
   const getExperiments = useCallback(() => {
     experimentsRequest({
-      url: `exp/projects/${projID}/experiments`,
+      url: `work/projects/${projID}/experiments`,
     })
       .then((data) => {
-        if (data.data.experiments) {
-          const experiments = data.data.experiments;
-          setExperiments(experiments);
+        if (data.data.workflows) {
+          const workflows = data.data.workflows;
+          setExperiments(workflows);
         }
       })
       .catch((error) => {
@@ -68,7 +68,7 @@ const Project = () => {
   const postNewExperiment = useCallback(
     (name: string, graphicalModel: GraphicalModelType) => {
       createExperimentRequest({
-        url: `/exp/projects/${projID}/experiments/create`,
+        url: `/work/projects/${projID}/workflows/create`,
         method: 'POST',
         data: {
           exp_name: name,
@@ -123,8 +123,8 @@ const Project = () => {
       return;
     }
     updateExpNameRequest({
-      url: `/exp/projects/${projID}/experiments/${
-        experiments[editingIndex!].id_experiment
+      url: `/work/projects/${projID}/workflows/${
+        experiments[editingIndex!].id_workflow
       }/update/name`,
       method: 'PUT',
       data: {
@@ -147,11 +147,11 @@ const Project = () => {
   };
 
   const handleOpenExperiment = (experiment: WorkflowType) => {
-    navigate(`/editor/experiment/${projID}/${experiment.id_experiment}`);
+    navigate(`/editor/experiment/${projID}/${experiment.id_workflow}`);
   };
 
   const handleAnalyzeExperiment = (experiment: WorkflowType) => {
-    window.open(`https://extreme-viz.pulsar.imsi.athenarc.gr/${experiment.id_experiment}`, '_blank', 'noopener,noreferrer');
+    window.open(`https://extreme-viz.pulsar.imsi.athenarc.gr/${experiment.id_workflow}`, '_blank', 'noopener,noreferrer');
   }
 
   function handleOpenPopover(index: number) {
@@ -171,7 +171,7 @@ const Project = () => {
   const handleDeleteExperiment = () => {
     if (deleteIndex === null) return;
     deleteExperimentRequest({
-      url: `/exp/projects/${projID}/experiments/${experiments[deleteIndex].id_experiment}/delete`,
+      url: `/work/projects/${projID}/workflows/${experiments[deleteIndex].id_workflow}/delete`,
       method: 'DELETE',
     })
       .then(() => {

@@ -90,7 +90,7 @@ const Experiments = () => {
   const handleCreateProject = () => {
     if (!isProjectNameValid(createprojName)) return;
     createProjectRequest({
-      url: `exp/projects/create`,
+      url: `work/projects/create`,
       method: 'POST',
       data: {
         name: createprojName,
@@ -146,7 +146,7 @@ const Experiments = () => {
     }
 
     updateProjectRequest({
-      url: `exp/projects/${currentProj.id_project}/update`,
+      url: `work/projects/${currentProj.id_project}/update`,
       method: 'PUT',
       data: {
         name: projNameInput,
@@ -178,7 +178,7 @@ const Experiments = () => {
 
   const handleDeleteProject = () => {
     deleteProjectRequest({
-      url: `exp/projects/${currentProj.id_project}/delete`,
+      url: `work/projects/${currentProj.id_project}/delete`,
       method: 'DELETE',
     })
       .then(() => {

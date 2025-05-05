@@ -15,7 +15,7 @@ export interface GraphicalModelType {
 }
 
 export interface WorkflowType {
-  id_experiment: string;
+  id_workflow: string;
   project_id: string;
   name: string;
   create_at: number;
@@ -40,7 +40,7 @@ export const defaultGraphicalModel = {
 };
 
 export const defaultWorkflow = {
-  id_experiment: '',
+  id_workflow: '',
   project_id: '',
   name: '',
   create_at: NaN,
