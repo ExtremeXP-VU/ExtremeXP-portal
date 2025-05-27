@@ -153,14 +153,14 @@ def delete_workflow(proj_id, work_id):
     methods=["OPTIONS", "PUT"],
 )
 @cross_origin()
-def update_workflow_name(proj_id, exp_id):
+def update_workflow_name(proj_id, work_id):
     work_name = request.json["work_name"]
     if workflowHandler.detect_duplicate(proj_id, work_name):
         return {
             "error": ERROR_DUPLICATE,
             "message": "Workflow name already exists",
         }, 409
-    workflowHandler.update_workflow_name(exp_id, proj_id, work_name)
+    workflowHandler.update_workflow_name(work_id, proj_id, work_name)
     return {"message": "workflow name updated"}, 200
 
 
@@ -169,10 +169,10 @@ def update_workflow_name(proj_id, exp_id):
     methods=["OPTIONS", "PUT"],
 )
 @cross_origin()
-def update_experiment_graphical_model(proj_id, exp_id):
+def update_experiment_graphical_model(proj_id, work_id):
     graphical_model = request.json["graphical_model"]
     workflowHandler.update_workflow_graphical_model(
-        exp_id, proj_id, graphical_model
+        work_id, proj_id, graphical_model
     )
     return {"message": "workflow graphical model updated"}, 200
 
@@ -307,7 +307,7 @@ def update_task_graphical_model(task_id):
 
 
 # EXECUTION
-@app.route("/work/execute/convert/<exp_id>", methods=["OPTIONS", "POST"])
+@app.route("/work/execute/convert/<work_id>", methods=["OPTIONS", "POST"])
 @cross_origin()
 def convert_to_source_model(work_id):
     if not workflowHandler.workflow_exists(work_id):
