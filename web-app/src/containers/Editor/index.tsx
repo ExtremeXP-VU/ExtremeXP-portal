@@ -340,7 +340,7 @@ const Editor = () => {
     let data = {};
     if (specificationType === 'workflow') {
       data = {
-        exp_name: newWorkName,
+        work_name: newWorkName,
         graphical_model: graphicalModel,
       };
     } else {

@@ -71,7 +71,7 @@ const Project = () => {
         url: `/work/projects/${projID}/workflows/create`,
         method: 'POST',
         data: {
-          exp_name: name,
+          work_name: name,
           graphical_model: graphicalModel,
         },
       })
@@ -128,7 +128,7 @@ const Project = () => {
       }/update/name`,
       method: 'PUT',
       data: {
-        exp_name: newExpName,
+        work_name: newExpName,
       },
     })
       .then(() => {
