@@ -6,10 +6,12 @@ import { logout } from '../../stores/accountStore';
 const Repository = () => {
   const location = useLocation();
   const isExperiments = location.pathname.includes('/projects');
+  const isWorkflows = location.pathname.includes('/workflows');
   const isTask = location.pathname.includes('/categories');
   const isReusableTask = location.pathname.includes('/reusable_tasks');
   const isProgress = location.pathname.includes('/progress');
   const experimentSelectedClass = isExperiments ? 'selected' : '';
+  const workflowsSelectedClass = isWorkflows ? 'selected' : '';
   const taskSelectedClass = isTask ? 'selected' : '';
   const reusableTaskSelectedClass = isReusableTask ? 'selected' : '';
   const progressSelectedClass = isProgress ? 'selected' : '';
@@ -28,12 +30,21 @@ const Repository = () => {
           <span>Dashboard</span>
         </div>
         <div className="repository__panel__items">
+          {/* TODO icon */}
           <Link to={'/dashboard/projects'}>
             <div
               className={`repository__panel__items__item ${experimentSelectedClass}`}
             >
               <span className="iconfont">&#xe6cf;</span>
               <p>Experiments</p>
+            </div>
+          </Link>
+          <Link to={'/dashboard/workflows'}>
+            <div
+              className={`repository__panel__items__item ${workflowsSelectedClass}`}
+            >
+              <span className="iconfont">&#xe6cf;</span>
+              <p>Workflows</p>
             </div>
           </Link>
           <Link to={'/dashboard/categories'}>
