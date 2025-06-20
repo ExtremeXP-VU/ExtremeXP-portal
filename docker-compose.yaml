@@ -47,8 +47,8 @@ services:
   web-app:
     build: ./web-app
     container_name: web-app
-    expose:
-      - '7001'
+    ports:
+      - "7001:7001"
     networks:
       - extremexp_network
 
