@@ -122,6 +122,7 @@ const Project = () => {
       message('The length of the name should be less than 35 characters.');
       return;
     }
+    console.log(workflows)
     updateWorkNameRequest({
       url: `/work/projects/${projID}/workflows/${
         workflows[editingIndex!].id_workflow
@@ -166,6 +167,8 @@ const Project = () => {
 
   const handleDeleteWorkflow= () => {
     if (deleteIndex === null) return;
+    console.log(workflows[deleteIndex]);
+    console.log(workflows);
     deleteWorkflowRequest({
       url: `/work/projects/${projID}/workflows/${workflows[deleteIndex].id_workflow}/delete`,
       method: 'DELETE',

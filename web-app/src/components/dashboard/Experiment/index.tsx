@@ -21,7 +21,7 @@ import {
   DeleteWorkflowResponseType,
 } from '../../../types/requests';
 
-const Project = () => {
+const ProjectExperiment = () => {
   const [experiments, setExperiments] = useState([defaultWorkflow]);
   const [editingIndex, setEditingIndex] = useState<number | null>(null);
   const [newExpName, setNewExpName] = useState('');
@@ -46,12 +46,12 @@ const Project = () => {
 
   const getExperiments = useCallback(() => {
     experimentsRequest({
-      url: `work/projects/${projID}/experiments`,
+      url: `exp/projects/${projID}/experiments`,
     })
       .then((data) => {
-        if (data.data.workflows) {
-          const workflows = data.data.workflows;
-          setExperiments(workflows);
+        if (data.data.experiments) {
+          const experiments = data.data.experiments;
+          setExperiments(experiments);
         }
       })
       .catch((error) => {
@@ -68,10 +68,10 @@ const Project = () => {
   const postNewExperiment = useCallback(
     (name: string, graphicalModel: GraphicalModelType) => {
       createExperimentRequest({
-        url: `/work/projects/${projID}/workflows/create`,
+        url: `/exp/projects/${projID}/experiments/create`,
         method: 'POST',
         data: {
-          work_name: name,
+          exp_name: name,
           graphical_model: graphicalModel,
         },
       })
@@ -123,12 +123,12 @@ const Project = () => {
       return;
     }
     updateExpNameRequest({
-      url: `/work/projects/${projID}/workflows/${
+      url: `/exp/projects/${projID}/experiments/${
         experiments[editingIndex!].id_workflow
       }/update/name`,
       method: 'PUT',
       data: {
-        work_name: newExpName,
+        exp_name: newExpName,
       },
     })
       .then(() => {
@@ -147,12 +147,9 @@ const Project = () => {
   };
 
   const handleOpenExperiment = (experiment: WorkflowType) => {
-    navigate(`/editor/experiment/${projID}/${experiment.id_workflow}`);
+    navigate(`/editor/experiment/${projID}/${experiment.id_experiment}`);
   };
 
-  const handleAnalyzeExperiment = (experiment: WorkflowType) => {
-    window.open(`https://extreme-viz.pulsar.imsi.athenarc.gr/${experiment.id_workflow}`, '_blank', 'noopener,noreferrer');
-  }
 
   function handleOpenPopover(index: number) {
     setDeleteIndex(index);
@@ -171,7 +168,7 @@ const Project = () => {
   const handleDeleteExperiment = () => {
     if (deleteIndex === null) return;
     deleteExperimentRequest({
-      url: `/work/projects/${projID}/workflows/${experiments[deleteIndex].id_workflow}/delete`,
+      url: `/exp/projects/${projID}/experiments/${experiments[deleteIndex].id_workflow}/delete`,
       method: 'DELETE',
     })
       .then(() => {
@@ -198,19 +195,13 @@ const Project = () => {
           className="specification__functions__new"
           onClick={handleNewExperiment}
         >
-          new workflow
-        </button>
-        <button
-          className="specification__functions__import"
-          onClick={handleImportExperiment}
-        >
-          import workflow
+          new experiment
         </button>
       </div>
       <div className="specification__contents">
         <div className="specification__contents__header">
           <div className="specification__contents__header__title">
-            Workflow
+            Experiment
           </div>
           <div className="specification__contents__header__create">
             Created At
@@ -223,7 +214,7 @@ const Project = () => {
         {isExperimentEmpty ? (
           <div className="specification__contents__empty">
             <span className="iconfont">&#xe6a6;</span>
-            <p>Empty Workflows</p>
+            <p>Empty Experiment</p>
           </div>
         ) : (
           <ul className="specification__contents__list">
@@ -279,12 +270,9 @@ const Project = () => {
                   </button>
                   <button
                     className="analyze_button"
-                    title="analyze experiment"
-                    onClick={() => {
-                      handleAnalyzeExperiment(specification);
-                    }}
+                    title="run experiment"
                   >
-                    analyze
+                    run
                   </button>
                 </div>
               </li>
@@ -319,4 +307,4 @@ const Project = () => {
   );
 };
 
-export default Project;
+export default ProjectExperiment;

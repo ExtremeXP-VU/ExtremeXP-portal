@@ -12,10 +12,12 @@ import Workflows from './containers/Dashboard/Workflows';
 import Progress from './containers/Dashboard/Progress';
 import ReusableTasks from './containers/Dashboard/ReusableTasks';
 import Project from './components/dashboard/Workflow';
+import ProjectExperiment from './components/dashboard/Experiment';
 import Tasks from './containers/Dashboard/Tasks';
 import Category from './components/dashboard/Task';
 import Editor from './containers/Editor';
 import Execution from './containers/Execution';
+import ExperimentDesigner from './components/experiments/ExperimentDesigner';
 
 const router = createBrowserRouter([
   {
@@ -46,7 +48,7 @@ const router = createBrowserRouter([
         children: [
           {
             path: '/dashboard/projects/:projID/experiments',
-            element: <Project />,
+            element: <ProjectExperiment />,
           },
         ],
       },
@@ -81,12 +83,16 @@ const router = createBrowserRouter([
     ],
   },
   {
-    path: '/editor/:type/:projID/:experimentID',
+    path: '/editor/:type/:projID/:workflowID',
     element: <Editor />,
   },
   {
     path: '/execution/convert/:projID/:experimentID',
     element: <Execution />,
+  },
+  {
+    path: '/editor/experiment/:projID/:experimentID',
+    element: <ExperimentDesigner />,
   },
 ]);
 

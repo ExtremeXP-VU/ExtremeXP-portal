@@ -83,16 +83,6 @@ const Header: React.FC<HeaderProps> = ({ onSave, onSaveAs }) => {
             Save as
           </button>
         </div>
-        <div className="header__right__execution">
-          {specificationType === 'experiment' && (
-            <button
-              className="header__right__execution__button"
-              onClick={handleExecution}
-            >
-              <span className="iconfont">&#xe606;</span>
-            </button>
-          )}
-        </div>
       </div>
     </div>
   );

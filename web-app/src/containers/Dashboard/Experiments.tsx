@@ -45,7 +45,7 @@ const Experiments = () => {
 
   const getProjects = useCallback(() => {
     projectsRequest({
-      url: `exp/projects`,
+      url: `work/projects`,
     })
       .then((data) => {
         if (data.data.projects) {
