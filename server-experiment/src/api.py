@@ -3,6 +3,7 @@ from flask_cors import CORS, cross_origin
 from userAuthHandler import userAuthHandler
 from projectHandler import projectHandler
 from workflowHandler import workflowHandler
+from experimentHandler import experimentHandler
 from categoryHandler import categoryHandler
 from taskHandler import taskHandler
 from convertorHandler import convertorHandler
@@ -169,7 +170,7 @@ def update_workflow_name(proj_id, work_id):
     methods=["OPTIONS", "PUT"],
 )
 @cross_origin()
-def update_experiment_graphical_model(proj_id, work_id):
+def update_workflow_graphical_model(proj_id, work_id):
     graphical_model = request.json["graphical_model"]
     workflowHandler.update_workflow_graphical_model(
         work_id, proj_id, graphical_model
@@ -319,5 +320,81 @@ def convert_to_source_model(work_id):
         return {"error": "Error converting model", "message": convert_res["error"]}, 500
     return {"message": "source model converted", "data": convert_res["data"]}, 200
 
+# EXPERIMENTS
+@app.route("/exp/projects/<proj_id>/experiments", methods=["GET"])
+@cross_origin()
+def get_experiments(proj_id):
+    experiments = experimentHandler.get_experiments(proj_id)
+    return {
+        "message": "experiments retrieved",
+        "data": {"experiments": experiments},
+    }, 200
+
+
+@app.route("/exp/projects/experiments/<exp_id>", methods=["GET"])
+@cross_origin()
+def get_experiment(exp_id):
+    experiment = experimentHandler.get_experiment(exp_id)
+    return {
+        "message": "experiment retrieved",
+        "data": {"experiment": experiment},
+    }, 200
+
+
+@app.route("/exp/projects/<proj_id>/experiments/create", methods=["OPTIONS", "POST"])
+@cross_origin()
+def create_experiment(proj_id):
+    exp_name = request.json["exp_name"]
+    graphical_model = request.json["graphical_model"]
+    if experimentHandler.detect_duplicate(proj_id, exp_name):
+        return {
+            "error": ERROR_DUPLICATE,
+            "message": "Experiment name already exists",
+        }, 409
+    res = experimentHandler.create_experiment(
+        g.username, proj_id, exp_name, graphical_model
+    )
+    return {"message": "Experiment created", "data": {"id_experiment": res}}, 201
+
+
+@app.route(
+    "/exp/projects/<proj_id>/experiments/<exp_id>/delete",
+    methods=["OPTIONS", "DELETE"],
+)
+@cross_origin()
+def delete_experiment(proj_id, exp_id):
+    if not experimentHandler.experiment_exists(exp_id):
+        return {"message": "this experiment does not exist"}, 404
+    experimentHandler.delete_experiment(exp_id, proj_id)
+    return {"message": "experiment deleted"}, 204
+
+
+@app.route(
+    "/exp/projects/<proj_id>/experiments/<exp_id>/update/name",
+    methods=["OPTIONS", "PUT"],
+)
+@cross_origin()
+def update_experiment_name(proj_id, exp_id):
+    exp_name = request.json["exp_name"]
+    if experimentHandler.detect_duplicate(proj_id, exp_name):
+        return {
+            "error": ERROR_DUPLICATE,
+            "message": "Experiment name already exists",
+        }, 409
+    experimentHandler.update_experiment_name(exp_id, proj_id, exp_name)
+    return {"message": "experiment name updated"}, 200
+
+
+@app.route(
+    "/exp/projects/<proj_id>/experiments/<exp_id>/update/graphical_model",
+    methods=["OPTIONS", "PUT"],
+)
+@cross_origin()
+def update_experiment_graphical_model(proj_id, exp_id):
+    graphical_model = request.json["graphical_model"]
+    experimentHandler.update_experiment_graphical_model(
+        exp_id, proj_id, graphical_model
+    )
+    return {"message": "experiment graphical model updated"}, 200
 
 # 406: Not Acceptable
